@@ -25,12 +25,9 @@ def create_shrubs():
    print(type(request))
    pay_file = request.files
    payload = request.form.to_dict()
-
-   
    dict_file = pay_file.to_dict()
    print(payload, '<-payload')
    print(dict_file, '<--dict_file')
-
    file_picture_path = save_picture(dict_file['file'])
    payload['image'] = file_picture_path
    print(payload, '<--payload', type(payload), 'type')
@@ -38,3 +35,11 @@ def create_shrubs():
    shrub_dict = model_to_dict(shrub)
    print(shrub.__dict__)
    return jsonify(data=shrub_dict, status={"code":201, "message":"success"})
+
+@api.route('/', methods=["GET"])
+def get_all_shrubs():
+   try:
+      shrubs = [model_to_dict(shrub) for shrub in models.Shrub.select()]
+      return jsonify(data=shrubs, status={"code": 200, "message":"success"})
+   except models.DoesNotExist:
+      return jsonify(data={}, status={"code": 401, "message": "there was an error retrieving the resource"})
