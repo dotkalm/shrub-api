@@ -43,7 +43,13 @@ def register():
 def login():
    print(request)
    print(type(request))
-   payload = request.form.to_dict()
+   # payload = request.form.to_dict()
+   payload = request.get_json()
    print(payload)
-   return payload['username']
+   user = models.User.get(models.User.username == payload['username'])
+   user_dict = model_to_dict(user)
+   print(user_dict)
+
+   return jsonify(data=user_dict, status={"code": 201, "message": "Success"})
+
       
