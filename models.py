@@ -4,7 +4,7 @@ from flask import request
 
 import datetime
 
-DATABASE = SqliteDatabase('shrubs3.sqlite')
+DATABASE = SqliteDatabase('shrubs.sqlite')
 
 class User(UserMixin, Model):
    username = CharField()

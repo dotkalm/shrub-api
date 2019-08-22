@@ -31,25 +31,38 @@ def register():
     payload = request.form.to_dict()
    #  dict_file = pay_file.to_dict()
     print(payload)
-    user = models.User.create(**payload) 
-    print(type(user)) 
-    login_user(user) 
-    user_dict = model_to_dict(user)
-    print(user_dict)
-    print(type(user_dict))
-    return jsonify(data=user_dict, status={"code": 201, "message": "Success"})
+    payload['email'].lower()
+    try: 
+       models.User.get(models.User.email == payload['email'])
+       return jsonify(data={}, status={"code": 401, "message": "A user with that name or email exists"})
+    except models.DoesNotExist:
+       payload['password'] = generate_password_hash(payload['password'])
+       user = models.User.create(**payload) 
+       print(type(user)) 
+       login_user(user) 
+       user_dict = model_to_dict(user)
+       print(user_dict)
+       print(type(user_dict))
+       del user_dict['password']
+       return jsonify(data=user_dict, status={"code": 201, "message": "Success"})
 
 @user.route('/login/', methods=["POST"])
 def login():
    print(request)
    print(type(request))
-   # payload = request.form.to_dict()
    payload = request.get_json()
-   print(payload)
-   user = models.User.get(models.User.username == payload['username'])
-   user_dict = model_to_dict(user)
-   print(user_dict)
-
-   return jsonify(data=user_dict, status={"code": 201, "message": "Success"})
+   try:
+      user = models.User.get(models.User.username == payload['username'])
+      user_dict = model_to_dict(user)
+      if user and check_password_hash(user.password, payload['password']):
+         user_dict = model_to_dict(user)
+         print(user_dict['password'],'<--- USER password')
+         return jsonify(data=user_dict, status={"code": 201, "message": "Success"})
+      elif not check_password_hash(user.password, payload['password']):
+         print('not it')
+         return jsonify(data={}, status={"code": 401, "message": "there was an error"})
+   except models.DoesNotExist:
+      return jsonify(data={}, status={"code": 401, "message": "there was an error"})
+   
 
       
