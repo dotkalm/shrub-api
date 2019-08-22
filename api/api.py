@@ -2,7 +2,7 @@ import models
 import os
 import sys
 import secrets
-from PIL import Image
+from PIL import Image, ImageChops
 
 from flask import Blueprint, request, jsonify,url_for, send_file
 from playhouse.shortcuts import model_to_dict
@@ -43,3 +43,4 @@ def get_all_shrubs():
       return jsonify(data=shrubs, status={"code": 200, "message":"success"})
    except models.DoesNotExist:
       return jsonify(data={}, status={"code": 401, "message": "there was an error retrieving the resource"})
+

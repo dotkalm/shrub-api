@@ -23,12 +23,12 @@ def save_picture(form_picture):
    i.save(file_path_for_avatar)
    return picture_name
 
-@user.route('/register', methods=["POST"])
+@user.route('/register/', methods=["POST"])
 def register():
     print(request)
     print(type(request))
    #  pay_file = request.files
-    payload = request.form.to_dict()
+    payload = request.get_json()
    #  dict_file = pay_file.to_dict()
     print(payload)
     payload['email'].lower()
