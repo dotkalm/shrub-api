@@ -2,18 +2,32 @@ import models
 import os
 import sys
 import secrets
-from PIL import Image, ImageChops
+from PIL import Image
 
 from flask import Blueprint, request, jsonify,url_for, send_file
 from playhouse.shortcuts import model_to_dict
 api = Blueprint('api', 'api', url_prefix="/api/v1")
+
+def color_value(form_picture):
+   random_hex = secrets.token_hex(8)
+   f_name, f_ext = os.path.splitext(form_picture.filename)
+   new_image = random_hex + f_ext
+   file_path_for_pixel = os.path.join(os.getcwd(), 'static/one_pixel/' + new_image)
+   output_size = (1, 1)
+   i = Image.open(form_picture)
+   i.thumbnail(output_size)
+   i.save(file_path_for_pixel)
+   pix = i.load()
+   print(i.size,'<--- i.size!')
+   rgb_values = pix[0,0]
+   return rgb_values
 
 def save_picture(form_picture):
    random_hex = secrets.token_hex(8)
    f_name, f_ext = os.path.splitext(form_picture.filename)
    picture_name = random_hex + f_ext
    file_path_for_avatar = os.path.join(os.getcwd(), 'static/shrub_pics/' + picture_name)
-   output_size = (825, 825)
+   output_size = (800, 800)
    i = Image.open(form_picture)
    i.thumbnail(output_size)
    i.save(file_path_for_avatar)
@@ -29,8 +43,17 @@ def create_shrubs():
    print(payload, '<-payload')
    print(dict_file, '<--dict_file')
    file_picture_path = save_picture(dict_file['file'])
+   pixel_picture_path = color_value(dict_file['file'])
+   payload['pixel'] = pixel_picture_path
    payload['image'] = file_picture_path
    print(payload, '<--payload', type(payload), 'type')
+   print(payload['pixel'][1])
+   if payload['pixel'][1] > payload['pixel'][0] and payload['pixel'][1] > payload['pixel'][2]:
+      print('mostly green')
+      payload['detect_shrub'] = True
+   else:
+      print('hmm.. doesnt seem to be a shrub')
+      payload['detect_shrub'] = False
    shrub = models.Shrub.create(**payload)
    shrub_dict = model_to_dict(shrub)
    print(shrub.__dict__)
