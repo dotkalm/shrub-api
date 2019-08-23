@@ -4,7 +4,7 @@ from flask import request
 
 import datetime
 
-DATABASE = SqliteDatabase('shrubs6.sqlite')
+DATABASE = SqliteDatabase('shrubs7.sqlite')
 
 class User(UserMixin, Model):
    username = CharField()
@@ -15,7 +15,9 @@ class User(UserMixin, Model):
       database = DATABASE
 class Shrub(Model):
    detect_shrub = BooleanField()
-   pixel = CharField()
+   average_red = IntegerField()
+   average_green = IntegerField()
+   average_blue = IntegerField()
    image = CharField()
    location = CharField()
    description = TextField()

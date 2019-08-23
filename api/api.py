@@ -44,11 +44,13 @@ def create_shrubs():
    print(dict_file, '<--dict_file')
    file_picture_path = save_picture(dict_file['file'])
    pixel_picture_path = color_value(dict_file['file'])
-   payload['pixel'] = pixel_picture_path
+   payload['average_red'] = pixel_picture_path[0]
+   payload['average_green'] = pixel_picture_path[1]
+   payload['average_blue'] = pixel_picture_path[2]
    payload['image'] = file_picture_path
    print(payload, '<--payload', type(payload), 'type')
-   print(payload['pixel'][1])
-   if payload['pixel'][1] > payload['pixel'][0] and payload['pixel'][1] > payload['pixel'][2]:
+   print(payload['average_green'])
+   if payload['average_green'] > payload['average_red'] and payload['average_green'] > payload['average_blue']:
       print('mostly green')
       payload['detect_shrub'] = True
    else:
