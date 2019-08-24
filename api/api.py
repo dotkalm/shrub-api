@@ -69,3 +69,8 @@ def get_all_shrubs():
    except models.DoesNotExist:
       return jsonify(data={}, status={"code": 401, "message": "there was an error retrieving the resource"})
 
+@api.route('/<id>', methods=["DELETE"])
+def delete_shrub(id):
+    query = models.Shrub.delete().where(models.Shrub.id == id)
+    query.execute()
+    return jsonify(data="delete successful", status={"code": 200, "message":"resource succesfully deleted"})
