@@ -30,8 +30,18 @@ def save_picture(form_picture):
    output_size = (800, 800)
    i = Image.open(form_picture)
    i.thumbnail(output_size)
+   dims = i.size
+   print(i.size, '<--- image size')
+   width = dims[0]
+   height = dims[1]
+   print(width,'width',height,'height')
    i.save(file_path_for_avatar)
    return picture_name
+
+def save_dimensions(form_picture):
+    i = Image.open(form_picture)
+    print(i,'<--- def save_dims')
+    return i.size
 
 @api.route('/', methods=["POST"])
 def create_shrubs():
@@ -44,7 +54,10 @@ def create_shrubs():
    print(dict_file, '<--dict_file')
    file_picture_path = save_picture(dict_file['file'])
    pixel_picture_path = color_value(dict_file['file'])
+   dimensions = save_dimensions(dict_file['file'])
    payload['average_red'] = pixel_picture_path[0]
+   payload['width'] = dimensions[0]
+   payload['height'] = dimensions[1]
    payload['average_green'] = pixel_picture_path[1]
    payload['average_blue'] = pixel_picture_path[2]
    payload['image'] = file_picture_path
@@ -68,6 +81,14 @@ def get_all_shrubs():
       return jsonify(data=shrubs, status={"code": 200, "message":"success"})
    except models.DoesNotExist:
       return jsonify(data={}, status={"code": 401, "message": "there was an error retrieving the resource"})
+
+@api.route('/<id>/profile', methods=["GET"])
+def get_shrubs_from_user(id):
+   user = models.User.get_by_id(id)
+   user.get()
+   
+   print(user, '<--- user')
+   return jsonify(data=model_to_dict(user), status={"code":200,"message":"success"})
 
 @api.route('/<id>', methods=["GET"])
 def get_one_shrub_from_one_user(id):

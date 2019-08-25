@@ -4,7 +4,7 @@ from flask import request
 
 import datetime
 
-DATABASE = SqliteDatabase('shrubs7.sqlite')
+DATABASE = SqliteDatabase('shrubs8.sqlite')
 
 class User(UserMixin, Model):
    username = CharField()
@@ -19,6 +19,8 @@ class Shrub(Model):
    average_green = IntegerField()
    average_blue = IntegerField()
    image = CharField()
+   height = IntegerField()
+   width = IntegerField()
    location = CharField()
    description = TextField()
    author = ForeignKeyField(User, backref='shrubs')
