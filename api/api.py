@@ -68,11 +68,13 @@ def get_all_shrubs():
       return jsonify(data=shrubs, status={"code": 200, "message":"success"})
    except models.DoesNotExist:
       return jsonify(data={}, status={"code": 401, "message": "there was an error retrieving the resource"})
-@api.route('/<author>/profile/<id>', methods=["GET"])
+
+@api.route('/<id>', methods=["GET"])
 def get_one_shrub_from_one_user(id):
     shrub = models.Shrub.get_by_id(id)
     print(shrub, '<-----shrub')
     return jsonify(data=model_to_dict(shrub), status={"code":200,"message":"success"})
+
 @api.route('/<id>', methods=["DELETE"])
 def delete_shrub(id):
     query = models.Shrub.delete().where(models.Shrub.id == id)
