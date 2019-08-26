@@ -6,7 +6,8 @@ from playhouse.db_url import connect
 import datetime
 import os
 
-DATABASE = connect(os.environ.get('DATABASE_URL'))
+#DATABASE = connect(os.environ.get('DATABASE_URL'))
+DATABASE = SqliteDatabase('shrubs7.sqlite')
 
 class User(UserMixin, Model):
    username = CharField()
