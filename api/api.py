@@ -96,6 +96,16 @@ def get_one_shrub_from_one_user(id):
     print(shrub, '<-----shrub')
     return jsonify(data=model_to_dict(shrub), status={"code":200,"message":"success"})
 
+@api.route('/<id>', methods=["PUT"])
+def update_shrub(id):
+   payload = request.get_json()
+   shrub = models.Shrub.get_by_id(id)
+   query = models.Shrub.update(location=payload['location'],description=payload['description']).where(models.Shrub.id == id)
+   query.execute()
+   updated_shrub = models.Shrub.get_by_id(id) #have to do another query to get updated resource 
+   print(updated_shrub)
+   return jsonify(data=model_to_dict(updated_shrub), status={"code":200,"message":"success"})
+
 @api.route('/<id>', methods=["DELETE"])
 def delete_shrub(id):
     query = models.Shrub.delete().where(models.Shrub.id == id)
