@@ -7,7 +7,7 @@ import datetime
 import os
 
 #DATABASE = connect(os.environ.get('DATABASE_URL'))
-DATABASE = SqliteDatabase('shrubs7.sqlite')
+DATABASE = SqliteDatabase('shrubs9.sqlite')
 
 class User(UserMixin, Model):
    username = CharField()
@@ -22,8 +22,6 @@ class Shrub(Model):
    average_green = IntegerField()
    average_blue = IntegerField()
    image = CharField()
-   height = IntegerField()
-   width = IntegerField()
    location = CharField()
    description = TextField()
    author = ForeignKeyField(User, backref='shrubs')
